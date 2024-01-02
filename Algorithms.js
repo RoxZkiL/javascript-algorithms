@@ -227,6 +227,22 @@ function sortPaddockTypeByTotalArea() {
 // 3 Arreglo con los nombres de los administradores, ordenados decrecientemente por la suma TOTAL de hectáreas que administran.
 function sortFarmManagerByAdminArea() {
   // CODE HERE
+  const sumHectaresByManager = {};
+
+  paddocks.forEach((paddock) => {
+    const managerId = paddock.paddockManagerId;
+
+    sumHectaresByManager[managerId] =
+      (sumHectaresByManager[managerId] || 0) + paddock.area;
+  });
+
+  const sortedManagers = paddockManagers.sort((a, b) => {
+    const sumA = sumHectaresByManager[a.id] || 0;
+    const sumB = sumHectaresByManager[b.id] || 0;
+    return sumB - sumA;
+  });
+
+  return sortedManagers.map((manager) => manager.name);
 }
 
 // 4 Objeto en que las claves sean los nombres de los campos y los valores un arreglo con los ruts de sus administradores ordenados alfabéticamente por nombre.
