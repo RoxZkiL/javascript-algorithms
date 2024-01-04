@@ -248,6 +248,34 @@ function sortFarmManagerByAdminArea() {
 // 4 Objeto en que las claves sean los nombres de los campos y los valores un arreglo con los ruts de sus administradores ordenados alfabéticamente por nombre.
 function farmManagerNames() {
   // CODE HERE
+  const resultObject = {};
+
+  for (const paddock of paddocks) {
+    const manager = paddockManagers.find(
+      (managerId) => managerId.id === paddock.paddockManagerId
+    );
+
+    const fieldName = farms.find((farmId) => farmId.id === paddock.farmId).name;
+
+    resultObject[fieldName] = resultObject[fieldName] || [];
+
+    resultObject[fieldName].push({
+      name: manager.name,
+      taxNumber: manager.taxNumber,
+    });
+  }
+
+  for (const key in resultObject) {
+    resultObject[key] = [
+      ...new Set(
+        resultObject[key]
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((admin) => admin.taxNumber)
+      ),
+    ];
+  }
+
+  return resultObject;
 }
 
 // 5 Arreglo ordenado decrecientemente con los m2 totales de cada campo que tengan más de 2 hectáreas en Paltos
